@@ -1,0 +1,24 @@
+{
+	"todos": [
+		{ "id": 0, "text": "Give dog a bath", "done": true },
+		{ "id": 1, "text": "Do laundry", "done": false },
+		{ "id": 2, "text": "Vacuum floor", "done": false },
+		{ "id": 3, "text": "Feed cat", "done": true },
+		{ "id": 4, "text": "Change light bulbs", "done": false },
+		{ "id": 5, "text": "Go to Store", "done": true },
+		{ "id": 6, "text": "Fill gas tank", "done": true },
+		{ "id": 7, "text": "Change linens", "done": false },
+		{ "id": 8, "text": "Rake leaves", "done": true },
+		{ "id": 9, "text": "Bake Cookies", "done": false },
+		{ "id": 10, "text": "Take nap", "done": true },
+		{ "id": 11, "text": "Read book", "done": false },
+		{ "id": 12, "text": "Exercise", "done": false },
+		{ "id": 13, "text": "Give dog a bath", "done": false },
+		{ "id": 14, "text": "Do laundry", "done": false },
+		{ "id": 15, "text": "Vacuum floor", "done": false },
+		{ "id": 16, "text": "Feed cat", "done": true },
+		{ "id": 17, "text": "Change light bulbs", "done": false },
+		{ "id": 18, "text": "Go to Store", "done": false },
+		{ "id": 19, "text": "Fill gas tank", "done": false }
+	]
+}
