@@ -1,130 +1,124 @@
 import { useEffect, useState } from "react";
-import { PaperBox, Root } from "./styled/grid";
 import {
-	Grid,
-	List,
-	ListItem,
-	ListItemButton,
-	ListItemIcon,
-	ListItemText,
-	Typography,
-	Checkbox,
+	Fab,
+	Stack,
 	Paper,
 	InputBase,
 	IconButton,
-	Fab,
-	Stack,
 	Tooltip,
 } from "@mui/material";
 import { AddCircleOutlineSharp, Delete } from "@mui/icons-material";
+import List from "./common/List";
+import TODOS from "../data/todos.json";
 
 export default function TodoList() {
-	const [todos, setTodos] = useState([]);
+	const [todos, setTodos] = useState(
+		localStorage.getItem("todos")
+			? JSON.parse(localStorage.getItem("todos"))
+			: TODOS.todos
+	);
+	const [todoText, setTodoText] = useState("");
 
 	useEffect(() => {
-		fetch("/data/todos.json")
-			.then((res) => res.json())
-			.then((data) => setTodos(data.todos));
-	}, []);
+		localStorage.setItem("todos", JSON.stringify(todos));
+	}, [todos]);
 
-	const [checked, setChecked] = useState([0]);
+	const handleToggle = (id) => () => {
+		setTodos(
+			todos.map((todo) => {
+				return { ...todo, done: todo.id === id ? !todo.done : todo.done };
+			})
+		);
+	};
 
-	const handleToggle = (value) => () => {
-		const currentIndex = checked.indexOf(value);
-		const newChecked = [...checked];
+	const handleAddTodo = () => {
+		if (todoText.length > 0) {
+			const maxId = todos.map((todo) => todo.id).sort((a, b) => b - a)[0] || 0;
 
-		if (currentIndex === -1) {
-			newChecked.push(value);
-		} else {
-			newChecked.splice(currentIndex, 1);
+			const newTodo = {
+				id: maxId + 1,
+				text: todoText.trim(),
+				done: false,
+			};
+
+			setTodoText("");
+			setTodos([newTodo, ...todos]);
 		}
+	};
 
-		setChecked(newChecked);
+	const handleNewTodoText = (evt) => {
+		setTodoText(evt.target.value);
+	};
+
+	const handleRemoveDone = () => {
+		const filteredTodos = todos.filter((todo) => !todo.done);
+		const removedTodos = todos.filter((todo) => todo.done);
+
+		setTodos(filteredTodos);
+		const prevRemovedTodos = JSON.parse(
+			localStorage.getItem("removedTodos") || "[]"
+		);
+		localStorage.setItem(
+			"removedTodos",
+			JSON.stringify(prevRemovedTodos.concat(removedTodos))
+		);
 	};
 
 	return (
-		<Grid container justifyContent="center">
-			<Root item>
-				<Typography variant="h5" align="center">
-					Todo List
-				</Typography>
-
-				<PaperBox elevation={3}>
-					<List
-						dense
-						disablePadding
-						sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+		<List
+			title="Todo List"
+			list={todos}
+			onToggle={handleToggle}
+			actionArea={
+				<Stack
+					direction="row"
+					sx={{ bottom: 0, zIndex: 1, position: "sticky" }}
+				>
+					<Paper
+						elevation={5}
+						sx={{
+							m: 1,
+							p: 0.2,
+							flex: 1,
+							borderRadius: 11,
+						}}
 					>
-						{todos.map((todo) => (
-							<ListItem key={todo.id} disablePadding divider>
-								<ListItemButton
-									dense
-									role={undefined}
-									onClick={handleToggle(todo.id)}
-								>
-									<ListItemIcon>
-										<Checkbox
-											edge="start"
-											disableRipple
-											tabIndex={-1}
-											checked={todo.done}
-										/>
-									</ListItemIcon>
-									<ListItemText
-										id={todo.todo}
-										primary={todo.todo}
-										primaryTypographyProps={{
-											sx: {
-												textDecoration: todo.done ? " line-through" : null,
-											},
-										}}
-									/>
-								</ListItemButton>
-							</ListItem>
-						))}
-					</List>
-					<Stack
-						direction="row"
-						sx={{ bottom: 0, zIndex: 1, position: "sticky" }}
-					>
-						<Paper
-							elevation={5}
-							sx={{
-								m: 1,
-								p: 0.2,
-								flex: 1,
-								borderRadius: 11,
-							}}
-						>
-							<InputBase
-								sx={{ width: "70%" }}
-								placeholder="Add item to list..."
-								inputProps={{ "aria-label": "Add item to list..." }}
-							/>
-							<Tooltip title="Add Todo" placement="top">
-								<IconButton
-									color="primary"
-									type="submit"
-									sx={{
-										p: 1,
-										mr: -1,
-										right: -7,
-										bottom: 0,
-									}}
-								>
-									<AddCircleOutlineSharp />
-								</IconButton>
-							</Tooltip>
-						</Paper>
-
-						<Tooltip title="Remove Completed" placement="top">
-							<Fab color="secondary" size="small" sx={{ ml: 1, mt: 1.2 }}>
-								<Delete sx={{ color: "white" }} />
-							</Fab>
+						<InputBase
+							value={todoText}
+							onChange={handleNewTodoText}
+							placeholder="Add item to list..."
+							onKeyDown={(evt) => evt.key === "Enter" && handleAddTodo()}
+							sx={{ width: "70%" }}
+						/>
+						<Tooltip title="Add Todo" placement="top">
+							<IconButton
+								color="primary"
+								type="button"
+								onClick={handleAddTodo}
+								sx={{
+									p: 1,
+									mr: -1,
+									right: -7,
+									bottom: 0,
+								}}
+							>
+								<AddCircleOutlineSharp />
+							</IconButton>
 						</Tooltip>
-					</Stack>
-				</PaperBox>
-			</Root>
-		</Grid>
+					</Paper>
+
+					<Tooltip title="Remove Completed" placement="top">
+						<Fab
+							size="small"
+							color="secondary"
+							onClick={handleRemoveDone}
+							sx={{ ml: 1, mt: 1.2, color: "white" }}
+						>
+							<Delete />
+						</Fab>
+					</Tooltip>
+				</Stack>
+			}
+		/>
 	);
 }
