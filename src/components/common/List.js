@@ -20,7 +20,7 @@ export default function List({
 	return (
 		<Grid container justifyContent="center">
 			<Root item>
-				<Typography variant="h5" align="center">
+				<Typography variant="h5" align="center" sx={{ my: { xs: -1 } }}>
 					{title}
 				</Typography>
 
@@ -29,7 +29,11 @@ export default function List({
 						<MuiList
 							dense
 							disablePadding
-							sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}
+							sx={{
+								width: "100%",
+								maxWidth: 360,
+								bgcolor: "background.paper",
+							}}
 						>
 							{list.map((item) => (
 								<ListItem

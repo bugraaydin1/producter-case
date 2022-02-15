@@ -11,10 +11,16 @@ export const PaperBox = styled(Paper)(({ theme }) => ({
 	width: 360,
 	minHeight: "16em",
 	maxHeight: "70vh",
-	overflowY: "scroll",
+	overflowY: "auto",
 	textAlign: "center",
 	padding: theme.spacing(3),
 	margin: `${theme.spacing(2)} ${theme.spacing(4)}`,
 	color: theme.palette.text.secondary,
 	borderRadius: 11,
+
+	[theme.breakpoints.down("md")]: {
+		width: "60vw",
+		minHeight: "12em",
+		maxHeight: "60vh",
+	},
 }));

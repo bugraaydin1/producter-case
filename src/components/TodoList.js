@@ -88,7 +88,11 @@ export default function TodoList() {
 							onChange={handleNewTodoText}
 							placeholder="Add item to list..."
 							onKeyDown={(evt) => evt.key === "Enter" && handleAddTodo()}
-							sx={{ width: "70%" }}
+							sx={{
+								width: { md: "70%", xs: "50%" },
+								textOverflow: "ellipsis",
+								whiteSpace: "nowrap",
+							}}
 						/>
 						<Tooltip title="Add Todo" placement="top">
 							<IconButton
